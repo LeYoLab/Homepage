@@ -20,6 +20,7 @@
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	
     <!-- Custom CSS-->
     <link href="css/general.css" rel="stylesheet">
@@ -63,8 +64,8 @@
 			<ul class="list-inline intro-social-buttons">
 				<li><a href="https://www.facebook.com/LeYoStoner" class="btn  btn-lg mybutton_cyano wow fadeIn" data-wow-delay="0.8s"><span class="network-name">Facebook</span></a>
 				</li>
-				<!-- <li id="download" ><a href="#downloadlink" class="btn  btn-lg mybutton_standard wow swing wow fadeIn" data-wow-delay="1.2s"><span class="network-name">Free Download</span></a>
-				</li> -->
+				 <li id="download" ><a href="#downloadlink" class="btn  btn-lg mybutton_standard wow swing wow fadeIn" data-wow-delay="1.2s"><span class="network-name">Free Download</span></a>
+				</li>
 			</ul>
 		</div>    
         <!-- /.container -->
@@ -123,7 +124,7 @@
 				<div class="col-sm-4 wow fadeInDown text-center">
 				  <img  class="rotate" src="img/icon/printer.svg" alt="Generic placeholder image">
 				   <h3>Tagesberichte</h3>
-				   <p class="lead">Die im laufe meines Praktikums entstandenen Tagesberichte können hier eingesehen werden.</p>
+				   <p class="lead">Die im Laufe meines Praktikums entstandenen Tagesberichte können hier eingesehen werden.</p>
 				   <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
 				</div><!-- /.col-lg-4 -->
 				
@@ -140,33 +141,76 @@
 	</div>
 	
 	<!-- Use it -->
-    <div id ="useit" class="content-section-a">
-
+    <div id ="quiz" class="content-section-a fadeIn">
+    	<h3 align="center">
+    		Quiz
+    	</h3>
+    	<br />
         <div class="container">
-			
-            <div class="row">
-			
-				<div class="col-sm-6 pull-right wow fadeInRightBig">
-                    <img class="img-responsive " src="img/ipad.png" alt="">
-                </div>
-				
-                <div class="col-sm-6 wow fadeInLeftBig"  data-animation-delay="200">   
-                    <h3 class="section-heading">Full Responsive</h3>
-					<div class="sub-title lead3">Lorem ipsum dolor sit atmet sit dolor greand fdanrh<br> sdfs sit atmet sit dolor greand fdanrh sdfs</div>
-                    <p class="lead">
-						In his igitur partibus duabus nihil erat, quod Zeno commuta rest gestiret. 
-						Sed virtutem ipsam inchoavit, nihil ampliusuma. Scien tiam pollicentur, 
-						uam non erat mirum sapientiae lorem cupido
-						patria esse cariorem. Quae qui non vident, nihilamane umquam magnum ac cognitione.
-					</p>
-
-					 <p><a class="btn btn-embossed btn-primary" href="#" role="button">View Details</a> 
-					 <a class="btn btn-embossed btn-info" href="#" role="button">Visit Website</a></p>
+                <div class="fadeInLeftBig"  data-animation-delay="200">   
+					<div id="currentQuestion">
+						<h5 id="question">
+							
+						</h5>
+					</div>
+					<div id="currentAnswers">
+						<input type="radio" name="answer" id="answer1" value=""><label class="label_answer" id="answerLabel1" for="answer1"></label><br />
+						<input type="radio" name="answer" id="answer2" value=""><label class="label_answer" id="answerLabel2" for="answer2"></label><br />
+						<input type="radio" name="answer" id="answer3" value=""><label class="label_answer" id="answerLabel3" for="answer3"></label><br />
+					</div>
+					<label d="send" name="send" class="btn wow tada btn-embossed btn-info pull-right animated animated" style="visibility: visible; animation-name: tada;">
+						Antwort überprüfen
+					</label>
 				</div>   
-            </div>
         </div>
-        <!-- /.container -->
     </div>
+
+    <script type="text/javascript">
+
+	//Frage anzeigen
+	$( document ).ready(function() {
+		var tmpID;
+  		$.ajax({
+  			url: "getQuestion"
+  		}
+  		).done(function(datachen){
+  			//Get Data Array
+  			console.log(datachen);
+  			var quizArray = $.parseJSON(datachen);
+
+  			//Extract Question and Answers
+  			var question = quizArray.q1;
+  			var answers  = [quizArray.a0, quizArray.a1, quizArray.a2];
+  			tmpID        = quizArray.id;
+
+  			//Show Question
+  			$('#question').html(question);
+
+  			//Show Answers
+  			$('#answerLabel1').html(answers[0]);
+  			$('#answerLabel2').html(answers[1]);
+  			$('#answerLabel3').html(answers[2]);
+  			$('#answer1').val(answers[0]);
+  			$('#answer2').val(answers[1]);
+  			$('#answer3').val(answers[2]);
+  		})
+  		//Check Answer
+  		$(document).on('click', '#send', function() 
+		{
+			$.ajax(
+			{
+			  url: "checkQuestion/"+$("input[type='radio'][name='answer']:checked").val()+"::"+tmpID,
+			}
+			).done(function(data) 
+			{
+			  var isCorrect = $.parseJSON(data);
+			  $('#iscorrect').html( (isCorrect) ? 'Antwort korrekt' : 'Antwort falsch!' );
+			});
+		});
+	});
+
+	//$('#send').click(function()
+</script>
 
     <div class="content-section-b"> 
 		
