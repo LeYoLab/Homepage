@@ -2,32 +2,39 @@
 require 'flight/Flight.php';
 require 'classes.php';
 
-$tmpRandomQuestionObject;
+//$tmpRandomQuestionObject;
 
-
-Flight::route('/getQuestion', function(){
-
+function createJSONQuest($alreadyArray = array()){
 	//Quiz
 	$quizObject = new Quiz();
 
 	//Zufällige Frage holen
 	$randomQuestionObject = $quizObject->getRandomQuestion();
-	$tmpRandomQuestionObject = $randomQuestionObject;
 
-	//Die dazugehörigen Antworten holen
-	$answerObjectArray = $randomQuestionObject->getAnswers();
-
-	//Antworten shufflen
-	shuffle($answerObjectArray);
-
-	$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
-	$i = 0;
-	foreach($answerObjectArray as $ans){
-		$lululu['a'.$i] = $ans->getAnswer();
-		$i++;
+	while (in_array($randomQuestionObject->getID(), $alreadyArray))
+	{
+		$randomQuestionObject = $quizObject->getRandomQuestion();
 	}
 
-	echo json_encode($lululu);
+		//Die dazugehörigen Antworten holen
+		$answerObjectArray = $randomQuestionObject->getAnswers();
+
+		//Antworten shufflen
+		shuffle($answerObjectArray);
+
+		$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
+		$i = 0;
+		foreach($answerObjectArray as $ans){
+			$lululu['a'.$i] = $ans->getAnswer();
+			$i++;
+		}
+
+		echo json_encode($lululu);
+}
+
+Flight::route('/getQuestion', function(){
+
+	
 
 });
 
@@ -44,6 +51,13 @@ Flight::route('/checkQuestion/@answer', function($answer){
 		$iscorrect=true;
 	}
 	echo json_encode($iscorrect);
+});
+
+
+Flight::route('/nextQuest/@previousQuestID', function($previusQuestID){
+
+
+
 });
 
 Flight::start();

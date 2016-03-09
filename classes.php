@@ -1,9 +1,16 @@
 	<?php 
 
-	define('DBHOST', 'mysql:host=leo-kleinschmidt.de.mysql;port=3306;');
-	define('DBNAME', 'dbname=leo_kleinschmid');
-	define('DBUSER', 'leo_kleinschmid');
-	define('DBPASS', '4tKTZnHz');
+	//Webspace
+	// define('DBHOST', 'mysql:host=leo-kleinschmidt.de.mysql;port=3306;');
+	// define('DBNAME', 'dbname=leo_kleinschmid');
+	// define('DBUSER', 'leo_kleinschmid');
+	// define('DBPASS', '4tKTZnHz');
+
+	//Localhost
+	define('DBHOST', 'mysql:host=localhost;port=8889;');
+	define('DBNAME', 'dbname=quiz');
+	define('DBUSER', 'root');
+	define('DBPASS', 'root');
 
 
 	class Quiz
