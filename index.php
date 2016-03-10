@@ -15,26 +15,25 @@ function createJSONQuest($alreadyArray = array()){
 	{
 		$randomQuestionObject = $quizObject->getRandomQuestion();
 	}
+	//Die dazugehörigen Antworten holen
+	$answerObjectArray = $randomQuestionObject->getAnswers();
 
-		//Die dazugehörigen Antworten holen
-		$answerObjectArray = $randomQuestionObject->getAnswers();
+	//Antworten shufflen
+	shuffle($answerObjectArray);
 
-		//Antworten shufflen
-		shuffle($answerObjectArray);
+	$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
+	$i = 0;
+	foreach($answerObjectArray as $ans){
+		$lululu['a'.$i] = $ans->getAnswer();
+		$i++;
+	}
 
-		$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
-		$i = 0;
-		foreach($answerObjectArray as $ans){
-			$lululu['a'.$i] = $ans->getAnswer();
-			$i++;
-		}
-
-		echo json_encode($lululu);
+	return json_encode($lululu);
 }
 
 Flight::route('/getQuestion', function(){
 
-	
+	echo createJSONQuest();
 
 });
 
@@ -54,9 +53,9 @@ Flight::route('/checkQuestion/@answer', function($answer){
 });
 
 
-Flight::route('/nextQuest/@previousQuestID', function($previusQuestID){
+Flight::route('/nextQuest/@previousQuestIDs', function($previusQuestIDs){
 
-
+	echo createJSONQuest(json_decode($previusQuestIDs));
 
 });
 

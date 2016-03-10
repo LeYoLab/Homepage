@@ -152,7 +152,7 @@
 						</h5>
 					</div>
 					<div id="currentAnswers">
-						<input type="radio" name="answer" id="answer1" value=""><label class="label_answer" id="answerLabel1" for="answer1"></label><br />
+						<input type="radio" name="answer" id="answer1" value=""><label class="label_answer" id="answerLabel1" for="answer1" checked="true"></label><br />
 						<input type="radio" name="answer" id="answer2" value=""><label class="label_answer" id="answerLabel2" for="answer2"></label><br />
 						<input type="radio" name="answer" id="answer3" value=""><label class="label_answer" id="answerLabel3" for="answer3"></label><br />
 					</div>
@@ -168,15 +168,45 @@
 
     <script type="text/javascript">
 
+    function array2json(arr) {
+	    var parts = [];
+	    var is_list = (Object.prototype.toString.apply(arr) === '[object Array]');
+
+	    for(var key in arr) {
+	        var value = arr[key];
+	        if(typeof value == "object") { //Custom handling for arrays
+	            if(is_list) parts.push(array2json(value)); /* :RECURSION: */
+	            else parts[key] = array2json(value); /* :RECURSION: */
+	        } else {
+	            var str = "";
+	            if(!is_list) str = '"' + key + '":';
+
+	            //Custom handling for multiple data types
+	            if(typeof value == "number") str += value; //Numbers
+	            else if(value === false) str += 'false'; //The booleans
+	            else if(value === true) str += 'true';
+	            else str += '"' + value + '"'; //All other things
+	            // :TODO: Is there any more datatype we should be in the lookout for? (Functions?)
+
+	            parts.push(str);
+	        }
+	    }
+	    var json = parts.join(",");
+
+	    if(is_list) return '[' + json + ']';//Return numerical JSON
+	    return '{' + json + '}';//Return associative JSON
+	}
+
 	//Frage anzeigen
 	$( document ).ready(function() {
 		var tmpID;
+		var alreadyQuests = new Array();
   		$.ajax({
   			url: "getQuestion"
   		}
   		).done(function(datachen){
   			//Get Data Array
-  			console.log(datachen);
+  			//console.log(datachen);
   			var quizArray = $.parseJSON(datachen);
 
   			//Extract Question and Answers
@@ -194,6 +224,8 @@
   			$('#answer1').val(answers[0]);
   			$('#answer2').val(answers[1]);
   			$('#answer3').val(answers[2]);
+
+  			alreadyQuests.push(tmpID);
   		})
   		//Check Answer
   		$(document).on('click', '#send', function() 
@@ -215,19 +247,45 @@
 			  	$('#nextquest').prop('disabled', false);
 			  }
 			});
+		});
 
-			$(document).on('click', '#nextquest', function() 
+  		//Next Question
+		$(document).on('click', '#nextquest', function() 
+		{
+			$tmpjson = array2json(alreadyQuests);
+			$.ajax(
 			{
-				$.ajax(
-				{
-				  url: "nextQuest/"+tmpID,
-				}
-				).done(function(data) 
-				{
-				  
+				url: "nextQuest/"+$tmpjson,
+			}
+			).done(function(datachen) 
+			{
+
+
+	  			var quizArray = $.parseJSON(datachen);
+
+	  			//Extract Question and Answers
+	  			var question = quizArray.q1;
+	  			var answers  = [quizArray.a0, quizArray.a1, quizArray.a2];
+	  			tmpID        = quizArray.id;
+
+	  			//Show Question
+	  			$('#question').html(question);
+
+	  			//Show Answers
+	  			$('#answerLabel1').html(answers[0]);
+	  			$('#answerLabel2').html(answers[1]);
+	  			$('#answerLabel3').html(answers[2]);
+	  			$('#answer1').val(answers[0]);
+	  			$('#answer2').val(answers[1]);
+	  			$('#answer3').val(answers[2]);
+
+	  			alreadyQuests.push(tmpID);
+			  	
+	  			$('#iscorrect').html('Warte auf eingabe...');
 			});
 		});
-	});
+
+  	});
 </script>
 
     <div class="content-section-b"> 

@@ -8,7 +8,7 @@
 
 	//Localhost
 	define('DBHOST', 'mysql:host=localhost;port=8889;');
-	define('DBNAME', 'dbname=quiz');
+	define('DBNAME', 'dbname=leo_kleinschmid');
 	define('DBUSER', 'root');
 	define('DBPASS', 'root');
 
