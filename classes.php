@@ -40,6 +40,12 @@
 			dumpmyvar($question);
 			return $question->getCorrectAnswerID();
 		}
+
+		public function getCount(){
+			$tmpding = $this->db->query("SELECT COUNT(id) AS count FROM questions WHERE true ");
+			$count = $tmpding->fetchAll();
+			return $count[0]['count'];
+		}
 	}
 
 	//Question Klasse

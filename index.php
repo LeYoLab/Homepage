@@ -31,6 +31,13 @@ function createJSONQuest($alreadyArray = array()){
 	return json_encode($lululu);
 }
 
+Flight::route('/getCount', function() {
+
+	$quizObject = new Quiz();
+	echo json_encode($quizObject->getCount());
+
+});
+
 Flight::route('/getQuestion', function(){
 
 	echo createJSONQuest();
