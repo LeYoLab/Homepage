@@ -10,6 +10,11 @@
      background-size:  contain;
      /*background-position: 40% 40%;*/
 
+     /*width: 1564px;*/
+     height: 895px;
+
+     margin: auto;
+
 
 }
 
@@ -19,6 +24,8 @@
 	margin: auto;
 
 	width: 33%;
+
+	color: white;
 }
 
 .quizInner{
@@ -31,4 +38,8 @@
      width: 50%;
      margin: auto;
      border: 1px solid red;
+}
+
+.label_answer{
+	color: white;
 }

@@ -11,9 +11,17 @@ function createJSONQuest($alreadyArray = array()){
 	//Zufällige Frage holen
 	$randomQuestionObject = $quizObject->getRandomQuestion();
 
+	$i=0;
+
 	while (in_array($randomQuestionObject->getID(), $alreadyArray))
 	{
+		$i++;
 		$randomQuestionObject = $quizObject->getRandomQuestion();
+
+		if ($i == $quizObject->getCount())
+		{
+			break;
+		}
 	}
 	//Die dazugehörigen Antworten holen
 	$answerObjectArray = $randomQuestionObject->getAnswers();
@@ -26,6 +34,10 @@ function createJSONQuest($alreadyArray = array()){
 	foreach($answerObjectArray as $ans){
 		$lululu['a'.$i] = $ans->getAnswer();
 		$i++;
+	}
+	if (count($lululu) < 1)
+	{
+		$lululu = "finished";
 	}
 
 	return json_encode($lululu);
