@@ -1,9 +1,9 @@
-.quiz {
+.quizSection {
 	/*background-color: #1F2437;*/
      color: white;
      font-family: 'Roboto', sans-serif;
 
-     background: url(http://img.bizhi.sogou.com/images/2014/07/21/745535.jpg) no-repeat center center #1F2437; 
+     /*background: url(http://img.bizhi.sogou.com/images/2014/07/21/745535.jpg) no-repeat center center #1F2437; */
      -webkit-background-size: auto;
      -moz-background-size: auto;
      -o-background-size: auto;
@@ -14,8 +14,6 @@
      height: 895px;
 
      margin: auto;
-
-
 }
 
 .quizLabel {
@@ -42,4 +40,17 @@
 
 .label_answer{
 	color: white;
+}
+
+.own_rb{
+	width: 50%;
+	height: 50%;
+}
+
+.content-section-a-colored{
+	background-color: #E8690C; /*Old value: #2fa8ec*/
+}
+
+.content-section-b-colored{
+	background-color: #FF9100;
 }
