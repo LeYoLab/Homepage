@@ -167,7 +167,7 @@
 							</li>
 						</ul>
 					</form>
-						<button id="send" name="send" class="btn tada btn-embossed btn-info pull-right" style="visibility: visible; opacity: 0; animation-name: tada;">Weiter</button>
+						<!--<button id="send" name="send" class="btn tada btn-embossed btn-info pull-right" style="visibility: visible; opacity: 0; animation-name: tada;">Weiter</button>-->
 						<!--<button disabled id="nextquest" name="nextquest" class="btn wow tada btn-embossed btn-info pull-right animated animated" style="visibility: visible; animation-name: tada; margin-right: 20px" >Nächste Frage</button>-->
 						<br />
 					</div>   
@@ -176,6 +176,10 @@
     </div>
 
     <script type="text/javascript">
+
+    	var questCount;
+		var tmpID;
+		var alreadyQuests = new Array();
 
     function array2json(arr) {
 	    var parts = [];
@@ -212,13 +216,12 @@
 		$('#quizcontainer').addClass("animated slideOutRight");
 
 		$tmpjson = array2json(alreadyQuests);
-		$(document).ajax(
+		$.ajax(
 		{
 			url: "nextQuest/"+$tmpjson
 		}
 		).done(function(datachen) 
 		{
-
   			var quizArray = $.parseJSON(datachen);
 
   			//Extract Question and Answers
@@ -243,6 +246,13 @@
 			  			$('#answer1').val(answers[0]);
 			  			$('#answer2').val(answers[1]);
 			  			$('#answer3').val(answers[2]);
+			  			$("input.rb_answer").each(function(i, el) {
+			  				console.log(i,el);
+			  				$(el).prop('checked', false);
+			  				resetRadio(el);
+			  				//$(el).trigger('change');
+			  			});
+			  			//document.setTimeout(console.log($("input[type='radio'][name='answer']:checked").prop('checked')),2000);
 		  			}
 
   				}
@@ -252,7 +262,6 @@
   			$('#quizcontainer').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(event){
   				$(this).off('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend');
   				$('#quizcontainer').removeClass("animated slideOutRight");
-  				console.log('was ist hier los?',event);
 		  		$('#quizcontainer').addClass("animated slideInLeft");
   			});
 
@@ -260,29 +269,8 @@
 		});
 	}
 
-	function toggleNextButton(showIt){
-		showIt = typeof showIt == "undefined" ? true : showIt;
-		var $sendbtn = $('#send');
-		if ($sendbtn.css('opacity') == 0){
-			$sendbtn.fadeTo('fast', 1);
-		}
-		else{
-			$sendbtn.fadeTo('fast', 0);
-		}
-	}
-
-	function addNextButtonListener(){
-		$('.rb_answer').click(function() {
-			toggleNextButton();
-		});
-	}
-
 	//Frage anzeigen
 	$( document ).ready(function() {
-		var questCount;
-		var tmpID;
-		var alreadyQuests = new Array();
-		addNextButtonListener();
   		$.ajax({
   			url: "getQuestion"
   		}
@@ -319,8 +307,9 @@
   			questCount = $.parseJSON(count);
   		});
   		//Check Answer
-  		$(document).on('click', '#send', function() 
+  		$(document).on('click', '.rb_answer', function() 
 		{
+			
 			$.ajax(
 			{
 			  url: "checkQuestion/"+$("input[type='radio'][name='answer']:checked").val()+"::"+tmpID,
@@ -329,7 +318,10 @@
 			{
 			  var isCorrect = $.parseJSON(data);
 			  console.log(isCorrect);
-			  getNextQuestion();
+			  setTimeout(function() {
+			  	getNextQuestion();
+			  }, 1000);
+			  //getNextQuestion();
 			});
 		});
   	});
