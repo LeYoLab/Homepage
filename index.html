@@ -154,25 +154,22 @@
 	        <div id="quizcontainer" class="container">
 	                <div>   
 						<form class="ac-custom ac-radio ac-fill" autocomplete="off">
-						<h2 id="question">Where do you proactively envision multimedia based expertise and cross-media growth strategies?</h2>
+						<h2 id="question"></h2>
 						<ul>
 							<li>
-								<input type="radio" name="answer" id="answer1" value=""><label style="color: white" id="answerLabel1" for="answer1"></label><br>
+								<input type="radio" name="answer" class="rb_answer" id="answer1" value=""><label style="color: white" id="answerLabel1" for="answer1"></label><br>
 							</li>
 							<li>
-								<input type="radio" name="answer" id="answer2" value=""><label style="color: white" id="answerLabel2" for="answer2"></label><br>
+								<input type="radio" name="answer" class="rb_answer" id="answer2" value=""><label style="color: white" id="answerLabel2" for="answer2"></label><br>
 							</li>
 							<li>
-								<input type="radio" name="answer" id="answer3" value=""><label style="color: white" id="answerLabel3" for="answer3"></label><br>
+								<input type="radio" name="answer" class="rb_answer" id="answer3" value=""><label style="color: white" id="answerLabel3" for="answer3"></label><br>
 							</li>
 						</ul>
 					</form>
-						<button id="send" name="send" class="btn wow tada btn-embossed btn-info pull-right animated animated" style="visibility: visible; animation-name: tada;" >Antwort überprüfen</button>
-						<button disabled id="nextquest" name="nextquest" class="btn wow tada btn-embossed btn-info pull-right animated animated" style="visibility: visible; animation-name: tada; margin-right: 20px" >Nächste Frage</button>
+						<button id="send" name="send" class="btn tada btn-embossed btn-info pull-right" style="visibility: visible; opacity: 0; animation-name: tada;">Weiter</button>
+						<!--<button disabled id="nextquest" name="nextquest" class="btn wow tada btn-embossed btn-info pull-right animated animated" style="visibility: visible; animation-name: tada; margin-right: 20px" >Nächste Frage</button>-->
 						<br />
-						<h3 id="iscorrect">
-							
-						</h3>
 					</div>   
 	    	</div>
     	</div>
@@ -209,11 +206,83 @@
 	    return '{' + json + '}';//Return associative JSON
 	}
 
+  	//Next Question
+	function getNextQuestion()
+	{
+		$('#quizcontainer').addClass("animated slideOutRight");
+
+		$tmpjson = array2json(alreadyQuests);
+		$(document).ajax(
+		{
+			url: "nextQuest/"+$tmpjson
+		}
+		).done(function(datachen) 
+		{
+
+  			var quizArray = $.parseJSON(datachen);
+
+  			//Extract Question and Answers
+  			var question = quizArray.q1;
+  			var answers  = [quizArray.a0, quizArray.a1, quizArray.a2];
+  			tmpID        = quizArray.id;
+
+  			var weg = false;
+
+  			$('#quizcontainer').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+  				
+  				if(!weg){
+  					console.log(questCount, alreadyQuests.length, questCount == alreadyQuests.length);
+  					weg = true;
+  					if (questCount == alreadyQuests.length){
+	  					$('#question').html("Quiz beendet!");
+	  				} else {
+			  			$('#question').html(question);
+			  			$('#answerLabel1').html(answers[0]);
+			  			$('#answerLabel2').html(answers[1]);
+			  			$('#answerLabel3').html(answers[2]);
+			  			$('#answer1').val(answers[0]);
+			  			$('#answer2').val(answers[1]);
+			  			$('#answer3').val(answers[2]);
+		  			}
+
+  				}
+  				
+  			});
+
+  			$('#quizcontainer').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(event){
+  				$(this).off('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend');
+  				$('#quizcontainer').removeClass("animated slideOutRight");
+  				console.log('was ist hier los?',event);
+		  		$('#quizcontainer').addClass("animated slideInLeft");
+  			});
+
+  			alreadyQuests.push(tmpID);
+		});
+	}
+
+	function toggleNextButton(showIt){
+		showIt = typeof showIt == "undefined" ? true : showIt;
+		var $sendbtn = $('#send');
+		if ($sendbtn.css('opacity') == 0){
+			$sendbtn.fadeTo('fast', 1);
+		}
+		else{
+			$sendbtn.fadeTo('fast', 0);
+		}
+	}
+
+	function addNextButtonListener(){
+		$('.rb_answer').click(function() {
+			toggleNextButton();
+		});
+	}
+
 	//Frage anzeigen
 	$( document ).ready(function() {
 		var questCount;
 		var tmpID;
 		var alreadyQuests = new Array();
+		addNextButtonListener();
   		$.ajax({
   			url: "getQuestion"
   		}
@@ -260,66 +329,7 @@
 			{
 			  var isCorrect = $.parseJSON(data);
 			  console.log(isCorrect);
-			  if (isCorrect===true){
-			  	$('#nextquest').prop('disabled', false);
-			  }
-			  else{
-			  	$('#nextquest').prop('disabled', false);
-			  }
-			});
-		});
-
-  		//Next Question
-		$(document).on('click', '#nextquest', function() 
-		{
-			$('#quizcontainer').addClass("animated slideOutRight");
-
-			$tmpjson = array2json(alreadyQuests);
-			$.ajax(
-			{
-				url: "nextQuest/"+$tmpjson
-			}
-			).done(function(datachen) 
-			{
-
-	  			var quizArray = $.parseJSON(datachen);
-
-	  			//Extract Question and Answers
-	  			var question = quizArray.q1;
-	  			var answers  = [quizArray.a0, quizArray.a1, quizArray.a2];
-	  			tmpID        = quizArray.id;
-
-	  			var weg = false;
-
-	  			$('#quizcontainer').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-	  				
-	  				if(!weg){
-	  					console.log(questCount, alreadyQuests.length, questCount == alreadyQuests.length);
-	  					weg = true;
-	  					if (questCount == alreadyQuests.length){
-		  					$('#question').html("Quiz beendet!");
-		  				} else {
-				  			$('#question').html(question);
-				  			$('#answerLabel1').html(answers[0]);
-				  			$('#answerLabel2').html(answers[1]);
-				  			$('#answerLabel3').html(answers[2]);
-				  			$('#answer1').val(answers[0]);
-				  			$('#answer2').val(answers[1]);
-				  			$('#answer3').val(answers[2]);
-			  			}
-
-	  				}
-	  				
-	  			});
-
-	  			$('#quizcontainer').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(event){
-	  				$(this).off('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend');
-	  				$('#quizcontainer').removeClass("animated slideOutRight");
-	  				console.log('was ist hier los?',event);
-			  		$('#quizcontainer').addClass("animated slideInLeft");
-	  			});
-
-	  			alreadyQuests.push(tmpID);
+			  getNextQuestion();
 			});
 		});
   	});
@@ -332,13 +342,12 @@
 			
 			<div class="col-md-6 col-md-offset-3 text-center wrap_title">
 				<h2>Contact Us</h2>
-				<p class="lead" style="margin-top:0">A special thanks to Death.</p>
 			</div>
 			
 			<form role="form" action="" method="post" >
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="InputName">Your Name</label>
+						<label for="InputName">Ihr Name</label>
 						<div class="input-group">
 							<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
@@ -346,7 +355,7 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="InputEmail">Your Email</label>
+						<label for="InputEmail">Ihre E-Mail Adresse</label>
 						<div class="input-group">
 							<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Email" required  >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
@@ -354,7 +363,7 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="InputMessage">Message</label>
+						<label for="InputMessage">Nachricht</label>
 						<div class="input-group">
 							<textarea name="InputMessage" id="InputMessage" class="form-control" rows="5" required></textarea>
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
