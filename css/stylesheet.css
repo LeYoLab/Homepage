@@ -54,3 +54,36 @@
 .content-section-b-colored{
 	background-color: #FF9100;
 }
+
+.testlol{
+     /*Chrome,Safari*/
+     -webkit-clip-path: polygon(285px 288px,485px 138px,385px 88px,85px 38px);
+
+     /*Firefox*/
+     clip-path: url("#clipPolygon");
+
+     /* iOS support inline encoded svg file*/
+     -webkit-mask: url(data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIwIiBoZWlnaHQ9IjAiPgogIDxjbGlwUGF0aCBpZD0ic3ZnQ2xpcCI+CiAgICA8cGF0aCBpZD0ic3ZnUGF0aCIgZD0iTTI4NSwyODggTDQ4NSwxMzggMzg1LDg4IDg1LDM4IHoiLz4KICA8L2NsaXBQYXRoPgogIDxwYXRoIGlkPSJzdmdNYXNrIiBkPSJNMjg1LDI4OCBMNDg1LDEzOCAzODUsODggODUsMzggeiIgIC8+Cjwvc3ZnPg==) no-repeat;
+}
+
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}

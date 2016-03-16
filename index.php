@@ -9,35 +9,24 @@ function createJSONQuest($alreadyArray = array()){
 	$quizObject = new Quiz();
 
 	//Zufällige Frage holen
-	$randomQuestionObject = $quizObject->getRandomQuestion();
+	$randomQuestionObject = $quizObject->getRandomQuestion($alreadyArray);
 
-	$i=0;
-
-	while (in_array($randomQuestionObject->getID(), $alreadyArray))
+	if ($randomQuestionObject != "finished")
 	{
-		$i++;
-		$randomQuestionObject = $quizObject->getRandomQuestion();
+		//Die dazugehörigen Antworten holen
+		$answerObjectArray = $randomQuestionObject->getAnswers();
 
-		if ($i == $quizObject->getCount())
-		{
-			break;
+		//Antworten shufflen
+		shuffle($answerObjectArray);
+
+		$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
+		$i = 0;
+		foreach($answerObjectArray as $ans){
+			$lululu['a'.$i] = $ans->getAnswer();
+			$i++;
 		}
-	}
-	//Die dazugehörigen Antworten holen
-	$answerObjectArray = $randomQuestionObject->getAnswers();
-
-	//Antworten shufflen
-	shuffle($answerObjectArray);
-
-	$lululu = array('q1' => $randomQuestionObject->getQuestion(), 'id' => $randomQuestionObject->getID());
-	$i = 0;
-	foreach($answerObjectArray as $ans){
-		$lululu['a'.$i] = $ans->getAnswer();
-		$i++;
-	}
-	if (count($lululu) < 1)
-	{
-		$lululu = "finished";
+	} else {
+		$lululu = array('q1' => "finished");
 	}
 
 	return json_encode($lululu);
@@ -57,7 +46,6 @@ Flight::route('/getQuestion', function(){
 });
 
 Flight::route('/checkQuestion/@answer', function($answer){
-
 	$iscorrect=false;
 	$tmpding = explode("::", $answer);
 	$answer=$tmpding[0];
@@ -67,6 +55,8 @@ Flight::route('/checkQuestion/@answer', function($answer){
 	$tmpAnswerString = $tmpQuestionObject->getCorrectAnswer();
 	if ($answer == $tmpAnswerString){
 		$iscorrect=true;
+	} else {
+		$iscorrect=false;
 	}
 	echo json_encode($iscorrect);
 });

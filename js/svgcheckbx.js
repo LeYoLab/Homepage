@@ -126,7 +126,6 @@ if( document.createElement('svg').getAttributeNS ) {
 	}
 
 	function resetRadio( el ) {
-		console.log(el);
 		Array.prototype.slice.call( document.querySelectorAll( 'input[type="radio"][name="' + el.getAttribute( 'name' ) + '"]' ) ).forEach( function( el ) { 
 			var path = el.parentNode.querySelector( 'svg > path' );
 			if( path ) {

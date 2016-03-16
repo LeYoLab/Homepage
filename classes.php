@@ -22,10 +22,32 @@
 			$this->db = $tmpdb->getDb();
 		}
 
-		public function getRandomQuestion(){
-			$tmpding = $this->db->query("SELECT * FROM questions WHERE true ORDER BY rand() DESC LIMIT 1");
+		public function getRandomQuestion($argument=array()){
+			$queryVals = array();
+			//version A
+			$tmpstring="";
+			$i=0;
+			if(count($argument) > 0){
+				foreach ($argument as $tmp){
+					if($i == 0){
+						$tmpstring = 'id <> '.$tmp;
+					} else {
+						$tmpstring .= ' AND id <> '.$tmp;
+					}
+					$i++;
+				}
+			} else {
+				$tmpstring = "true";
+			}
+
+			$tmpding = $this->db->prepare("SELECT * FROM questions WHERE $tmpstring ORDER BY rand() DESC LIMIT 1");
+			$tmpding->execute($queryVals);
 			$question = $tmpding->fetchAll(PDO::FETCH_CLASS, "Question");
-			return $question[0];
+			if (isset($question[0])){
+				return $question[0];
+			} else {
+				return "finished";
+			}
 		}
 
 		public function getQuestionByID($id){

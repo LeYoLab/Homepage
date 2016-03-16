@@ -23,6 +23,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	
+	
     <!-- Custom CSS-->
     <link href="css/general.css" rel="stylesheet">
     <link rel="stylesheet" href="css/stylesheet.css">
@@ -177,9 +178,13 @@
 
     <script type="text/javascript">
 
-    	var questCount;
-		var tmpID;
-		var alreadyQuests = new Array();
+    
+
+    var score = new Array();
+
+	var questCount;
+	var tmpID;
+	var alreadyQuests = new Array();
 
     function array2json(arr) {
 	    var parts = [];
@@ -210,6 +215,26 @@
 	    return '{' + json + '}';//Return associative JSON
 	}
 
+  	function checkIt() 
+	{
+		$('.rb_answer').off("click");
+		$.ajax(
+		{
+		  url: "checkQuestion/"+$("input[type='radio'][name='answer']:checked").val()+"::"+tmpID,
+		}
+		).done(function(data) 
+		{
+		  var isCorrect = $.parseJSON(data);
+		  console.log(isCorrect);
+		  setTimeout(function() {
+		  	getNextQuestion();
+		  }, 1000);
+		  alreadyQuests.push(tmpID);
+		  score.push (isCorrect);
+		  console.log(alreadyQuests);
+		});
+	}
+
   	//Next Question
 	function getNextQuestion()
 	{
@@ -234,11 +259,32 @@
   			$('#quizcontainer').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
   				
   				if(!weg){
-  					console.log(questCount, alreadyQuests.length, questCount == alreadyQuests.length);
   					weg = true;
-  					if (questCount == alreadyQuests.length){
-	  					$('#question').html("Quiz beendet!");
-	  				} else {
+  					if (question == "finished")
+  					{
+  						console.log(score);
+  						var correctCount=0;
+  						for (var i = 0; i < score.length; i++) {
+  							if (score[i] == true) { correctCount++; }
+  						}
+  						console.log(score);
+  						$('#quizcontainer').html("<h2 style='text-align: center;'>Quiz beendet!</h2><br /><br /> <div style='text-align: center;'><span  class='richtigbeantwortet'></span></div>");
+  						setTimeout(function() {
+
+  							$(".richtigbeantwortet").typed({
+				            strings: ["Du hast " + correctCount + " von " + score.length + " Fragen richtig beantwortet"],
+				            typeSpeed: 0
+				        })
+
+  						}, 1000);
+
+  						// $richtig = $('.richtigbeantwortet');
+  						// $richtig.typed({
+  						// 	strings: ["Du hast " + correctCount + " von " + score.length + " Fragen richtig beantwortet"],
+  						// 	contentType: 'text'
+  						// });
+	  				} 
+	  				else {
 			  			$('#question').html(question);
 			  			$('#answerLabel1').html(answers[0]);
 			  			$('#answerLabel2').html(answers[1]);
@@ -247,16 +293,13 @@
 			  			$('#answer2').val(answers[1]);
 			  			$('#answer3').val(answers[2]);
 			  			$("input.rb_answer").each(function(i, el) {
-			  				console.log(i,el);
 			  				$(el).prop('checked', false);
 			  				resetRadio(el);
-			  				//$(el).trigger('change');
 			  			});
-			  			//document.setTimeout(console.log($("input[type='radio'][name='answer']:checked").prop('checked')),2000);
 		  			}
 
   				}
-  				
+  				$('.rb_answer').on("click", checkIt);
   			});
 
   			$('#quizcontainer').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(event){
@@ -264,8 +307,6 @@
   				$('#quizcontainer').removeClass("animated slideOutRight");
 		  		$('#quizcontainer').addClass("animated slideInLeft");
   			});
-
-  			alreadyQuests.push(tmpID);
 		});
 	}
 
@@ -294,8 +335,6 @@
   			$('#answer1').val(answers[0]);
   			$('#answer2').val(answers[1]);
   			$('#answer3').val(answers[2]);
-
-  			alreadyQuests.push(tmpID);
   		})
 
   		//Get Count
@@ -307,23 +346,7 @@
   			questCount = $.parseJSON(count);
   		});
   		//Check Answer
-  		$(document).on('click', '.rb_answer', function() 
-		{
-			
-			$.ajax(
-			{
-			  url: "checkQuestion/"+$("input[type='radio'][name='answer']:checked").val()+"::"+tmpID,
-			}
-			).done(function(data) 
-			{
-			  var isCorrect = $.parseJSON(data);
-			  console.log(isCorrect);
-			  setTimeout(function() {
-			  	getNextQuestion();
-			  }, 1000);
-			  //getNextQuestion();
-			});
-		});
+  		$('.rb_answer').on('click', checkIt);
   	});
 </script>
 	
@@ -449,6 +472,7 @@
 	<!-- Smoothscroll -->
 	<script type="text/javascript" src="js/jquery.corner.js"></script> 
 	<script src="js/wow.min.js"></script>
+	<script src="js/typed.js"></script>
 	<script>
 	 new WOW().init();
 	</script>
