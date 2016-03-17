@@ -146,7 +146,7 @@
 	</div>
 	
 	<!-- Quiz -->
-    <div class="content-section-a quizSection content-section-a-colored">
+    <div class="content-section-a quizSection content-section-a-colored nurzumtest" id="quiz">
     	<div class="wow animated bounceInUp" style="animation-delay: 200ms;">
 	    	<div align="center" class="quizLabel">
 	    		Quiz
@@ -215,6 +215,16 @@
 	    return '{' + json + '}';//Return associative JSON
 	}
 
+	function typeIt()
+	{
+		$('.diary').typed({
+
+			strings: ["Tag 1: Ich kam pünktlich um 09:15 in die Firma."],
+			typeSpeed: 10
+
+		});
+	}
+
   	function checkIt() 
 	{
 		$('.rb_answer').off("click");
@@ -225,13 +235,11 @@
 		).done(function(data) 
 		{
 		  var isCorrect = $.parseJSON(data);
-		  console.log(isCorrect);
 		  setTimeout(function() {
 		  	getNextQuestion();
 		  }, 1000);
 		  alreadyQuests.push(tmpID);
 		  score.push (isCorrect);
-		  console.log(alreadyQuests);
 		});
 	}
 
@@ -262,27 +270,19 @@
   					weg = true;
   					if (question == "finished")
   					{
-  						console.log(score);
   						var correctCount=0;
   						for (var i = 0; i < score.length; i++) {
   							if (score[i] == true) { correctCount++; }
   						}
-  						console.log(score);
   						$('#quizcontainer').html("<h2 style='text-align: center;'>Quiz beendet!</h2><br /><br /> <div style='text-align: center;'><span  class='richtigbeantwortet'></span></div>");
   						setTimeout(function() {
 
   							$(".richtigbeantwortet").typed({
-				            strings: ["Du hast " + correctCount + " von " + score.length + " Fragen richtig beantwortet"],
+				            strings: ["Du hast " + correctCount + " von " + score.length + " Fragen richtig beantwortet."],
 				            typeSpeed: 0
 				        })
 
   						}, 1000);
-
-  						// $richtig = $('.richtigbeantwortet');
-  						// $richtig.typed({
-  						// 	strings: ["Du hast " + correctCount + " von " + score.length + " Fragen richtig beantwortet"],
-  						// 	contentType: 'text'
-  						// });
 	  				} 
 	  				else {
 			  			$('#question').html(question);
@@ -317,7 +317,6 @@
   		}
   		).done(function(datachen){
   			//Get Data Array
-  			//console.log(datachen);
   			var quizArray = $.parseJSON(datachen);
 
   			//Extract Question and Answers
@@ -347,16 +346,36 @@
   		});
   		//Check Answer
   		$('.rb_answer').on('click', checkIt);
+
+  		$('.lololol').on('click', typeIt);
   	});
 </script>
 	
+	<!-- Tagesberichte -->
+	<div id="tagesberichte" class="content-section-b content-section-b-colored">
+		<div class="container">
+			<div class="wow col-md-6 col-md-offset-3 text-center wrap_title">
+				<h2>Tagesberichte</h2>
+				<p class="lead" style="margin-top:0">Die im Laufe des Praktikums entstandenen Tagesberichte.</p>
+				<p>
+					<span class="diary">
+						
+					</span>
+				</p>
+				<form>
+					<input class="lololol" name="lololol" value="Anzeigen" type="button">
+				</form>
+			</div>
+		</div>
+	</div>
+
 	<!-- Contact -->
-	<div id="contact" class="content-section-b content-section-b-colored">
+	<div id="contact" class="content-section-a content-section-a-colored">
 		<div class="container">
 			<div class="row">
 			
 			<div class="col-md-6 col-md-offset-3 text-center wrap_title">
-				<h2>Contact Us</h2>
+				<h2>Kontaktiere mich!</h2>
 			</div>
 			
 			<form role="form" action="" method="post" >
@@ -364,7 +383,7 @@
 					<div class="form-group">
 						<label for="InputName">Ihr Name</label>
 						<div class="input-group">
-							<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+							<input type="text" class="form-control" name="InputName" id="InputName" placeholder="Geben sie ihren Namen ein" required>
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 					</div>
@@ -372,7 +391,7 @@
 					<div class="form-group">
 						<label for="InputEmail">Ihre E-Mail Adresse</label>
 						<div class="input-group">
-							<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Email" required  >
+							<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Geben sie ihre E-Mail Adresse ein" required  >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span>
 						</div>
 					</div>
@@ -392,7 +411,7 @@
 			<hr class="featurette-divider hidden-lg">
 				<div class="col-md-5 col-md-push-1 address">
 					<address>
-					<h3>Office Location</h3>
+					<h3></h3>
 					<p class="lead"><a href="https://www.google.com/maps/preview?ie=UTF-8&q=The+Pentagon&fb=1&gl=us&hq=1400+Defense+Pentagon+Washington,+DC+20301-1400&cid=12647181945379443503&ei=qmYfU4H8LoL2oATa0IHIBg&ved=0CKwBEPwSMAo&safe=on">The Pentagon<br>
 					Washington, DC 20301</a><br>
 					Phone: XXX-XXX-XXXX<br>
@@ -413,7 +432,7 @@
 	
 	
 	
-    <footer>
+<!-- <footer>
       <div class="container">
         <div class="row">
           <div class="col-md-7">
@@ -423,7 +442,7 @@
               Go to: <a  href="http://andreagalanti.it" target="_blank">andreagalanti.it</a>
             </p>
 			
-			<!-- LICENSE -->
+			
 			<a rel="cc:attributionURL" href="http://www.andreagalanti.it/flatfy"
 		   property="dc:title">Flatfy Theme </a> by
 		   <a rel="dc:creator" href="http://www.andreagalanti.it"
@@ -434,7 +453,7 @@
 		   Commons Attribution 3.0 License - NOT COMMERCIAL</a>.
 		   
 	   
-          </div> <!-- /col-xs-7 -->
+          </div> 
 
           <div class="col-md-5">
             <div class="footer-banner">
@@ -451,7 +470,7 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer> -->
 
     <!-- JavaScript -->
     <script src="js/jquery-1.10.2.js"></script>
