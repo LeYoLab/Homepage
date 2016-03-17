@@ -146,7 +146,7 @@
 	</div>
 	
 	<!-- Quiz -->
-    <div class="content-section-a quizSection content-section-a-colored nurzumtest" id="quiz">
+    <div class="content-section-a quizSection content-section-a-colored" id="quiz">
     	<div class="wow animated bounceInUp" style="animation-delay: 200ms;">
 	    	<div align="center" class="quizLabel">
 	    		Quiz
@@ -270,6 +270,8 @@
   					weg = true;
   					if (question == "finished")
   					{
+  						$('.quizLabel').animate({width: '17%'});
+  						$('.quizSection').animate({height: 447}, 800);
   						var correctCount=0;
   						for (var i = 0; i < score.length; i++) {
   							if (score[i] == true) { correctCount++; }
@@ -354,18 +356,11 @@
 	<!-- Tagesberichte -->
 	<div id="tagesberichte" class="content-section-b content-section-b-colored">
 		<div class="container">
-			<div class="wow col-md-6 col-md-offset-3 text-center wrap_title">
+			<div class="col-md-6 col-md-offset-3 text-center wrap_title">
 				<h2>Tagesberichte</h2>
 				<p class="lead" style="margin-top:0">Die im Laufe des Praktikums entstandenen Tagesberichte.</p>
-				<p>
-					<span class="diary">
-						
-					</span>
-				</p>
-				<form>
-					<input class="lololol" name="lololol" value="Anzeigen" type="button">
-				</form>
 			</div>
+			
 		</div>
 	</div>
 
